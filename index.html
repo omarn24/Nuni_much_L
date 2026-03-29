@@ -29,25 +29,113 @@
             min-height: 100vh;
         }
 
-        /* ─── Ambient Particles ─── */
-        .particles {
+        /* ─── Starlight Ceiling ─── */
+        .starfield {
             position: fixed; inset: 0;
             z-index: 0;
             pointer-events: none;
+            overflow: hidden;
         }
-        .particle {
+        .star {
             position: absolute;
-            background: var(--gold);
+            background: #fff;
             border-radius: 50%;
-            opacity: 0;
-            animation: drift var(--dur) ease-in-out infinite;
+            animation: starTwinkle var(--dur) ease-in-out infinite alternate;
             animation-delay: var(--delay);
         }
-        @keyframes drift {
-            0%   { opacity: 0; transform: translateY(0) scale(0.5); }
-            30%  { opacity: var(--peak-opacity); }
-            70%  { opacity: var(--peak-opacity); }
-            100% { opacity: 0; transform: translateY(-60vh) scale(0); }
+        .star.warm { background: var(--gold-light); }
+        @keyframes starTwinkle {
+            0%   { opacity: var(--min-o); transform: scale(0.8); }
+            100% { opacity: var(--max-o); transform: scale(1.2); }
+        }
+
+        /* ─── Star Name ─── */
+        .star-name {
+            position: fixed;
+            z-index: 0;
+            pointer-events: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: clamp(6rem, 16vw, 14rem);
+            letter-spacing: 0.15em;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(201,169,110,0.15);
+            user-select: none;
+            white-space: nowrap;
+        }
+        .star-name.left {
+            top: 35%;
+            left: -2%;
+            transform: rotate(-12deg);
+        }
+        .star-name.right {
+            top: 55%;
+            right: -2%;
+            transform: rotate(8deg);
+        }
+
+        /* ─── Shooting Stars ─── */
+        .shooting-star {
+            position: fixed;
+            width: 2px; height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 0 4px 1px rgba(255,255,255,0.3);
+        }
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%; right: 100%;
+            width: 80px; height: 1px;
+            background: linear-gradient(to left, rgba(255,255,255,0.6), transparent);
+            transform: translateY(-50%);
+        }
+        .shooting-star.active {
+            animation: shoot var(--dur) linear forwards;
+        }
+        @keyframes shoot {
+            0%   { opacity: 0; transform: translate(0, 0) rotate(var(--angle)); }
+            5%   { opacity: 1; }
+            70%  { opacity: 1; }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--angle)); }
+        }
+
+        /* ─── Moon ─── */
+        .moon {
+            position: fixed;
+            top: 8%;
+            right: 12%;
+            z-index: 1;
+            pointer-events: none;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 40%, #e8e0d4 0%, #d4c9b0 40%, #b8a88a 100%);
+            box-shadow:
+                0 0 40px rgba(232,224,212,0.08),
+                0 0 80px rgba(201,169,110,0.06),
+                0 0 120px rgba(201,169,110,0.03);
+            overflow: hidden;
+        }
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: -5px; right: -15px;
+            width: 70px; height: 90px;
+            background: var(--bg);
+            border-radius: 50%;
+        }
+        .moon-glow {
+            position: fixed;
+            top: calc(8% + 10px);
+            right: calc(12% - 30px);
+            z-index: 0;
+            pointer-events: none;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,169,110,0.04) 0%, transparent 70%);
         }
 
         /* ─── Confetti ─── */
@@ -87,7 +175,7 @@
         /* ─── Hero ─── */
         #hero { min-height: 100vh; }
         #hero .cake-emoji {
-            font-size: 64px;
+            font-size: 80px;
             cursor: pointer;
             user-select: none;
             animation: gentleFloat 4s ease-in-out infinite;
@@ -100,8 +188,8 @@
             filter: drop-shadow(0 0 50px rgba(201,169,110,0.35));
         }
         .envelope-hint {
-            margin-top: 16px;
-            font-size: 0.7rem;
+            margin-top: 18px;
+            font-size: 0.8rem;
             color: var(--text-muted);
             letter-spacing: 0.18em;
             text-transform: lowercase;
@@ -342,6 +430,106 @@
             text-transform: uppercase;
         }
 
+        /* ─── From Me Section ─── */
+        #from-me {
+            min-height: 60vh;
+            background: var(--bg);
+        }
+        .from-me-wrap {
+            text-align: center;
+        }
+        .from-me-wrap p {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            letter-spacing: 0.02em;
+        }
+        .photo-trigger {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-subtle);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .photo-trigger:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(201,169,110,0.1);
+        }
+        .photo-trigger .trigger-icon {
+            font-size: 1.4rem;
+            color: var(--gold);
+            transition: all 0.4s ease;
+        }
+        .photo-reveal {
+            margin-top: 36px;
+            opacity: 0;
+            transform: scale(0.92);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+        .photo-reveal.show {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .photo-reveal img {
+            width: 220px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            filter: grayscale(20%) contrast(0.95);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .photo-caption {
+            margin-top: 16px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.6s ease 0.3s;
+        }
+        .photo-reveal.show + .photo-caption,
+        .photo-caption.show {
+            opacity: 0.5;
+        }
+        .photo-timer {
+            margin-top: 12px;
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            border-radius: 1px;
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .photo-timer.show { opacity: 1; }
+        .photo-timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--gold);
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+        .photo-timer-bar.animate {
+            transform: scaleX(1);
+            transition: transform 5s linear;
+        }
+
         /* ─── Fireworks Canvas ─── */
         #fireworks-canvas {
             position: fixed;
@@ -457,7 +645,7 @@
             gap: 8px;
         }
         .music-hint {
-            font-size: 0.55rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
             letter-spacing: 0.15em;
             text-transform: lowercase;
@@ -468,13 +656,13 @@
         }
         .music-btn {
             z-index: 200;
-            width: 44px; height: 44px;
+            width: 54px; height: 54px;
             border: 1px solid var(--border);
             border-radius: 0;
             background: rgba(26,23,20,0.8);
             backdrop-filter: blur(12px);
             color: var(--gold);
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -515,7 +703,7 @@
 Сен өз жолыңды табасың, и впереди у тебя много хорошего.
 
 Я уважаю тебя и ценю то, каким человеком ты являешься.
-В тебе есть редкое сочетание — доброта, нежность и внутренняя сила.
+В тебе есть редкое сочетание — доброты, нежности и внутренней силы.
 
 Иногда думаю о простых вещах:
 прогулки без плана,
@@ -523,14 +711,14 @@
 спокойные разговоры…
 И мне почему-то легко представить это рядом с тобой.
 
-Мы с тобой всё правильно решили, и мне нравится, как мы это сделали — спокойно, честно и по-взрослому.
-Но я рад, что в моей жизни есть ты. Мен үшін маңыздысың 🤍
+Возможно мы с тобой всё правильно решили или нет, но мне нравится то, как мы это сделали — спокойно, честно и по-взрослому.
+Но я очень рад, что в моей жизни есть ты. Мен үшін өте ерекшесің, маңыздысың 🤍
 
 Пусть у тебя будет больше поводов улыбаться,
 меньше причин переживать,
-и рядом всегда будут искренние люди.
+и пусть рядом всегда будут искренние люди.
 
-Қандай жағдай болса да, мен саған тек жақсылық тілеймін.
+Қандай жағдай болса да, мен саған тек жақсылық тілеймін, жаныңнан табылуға тырысамын, қолдаймын.
 И когда мы снова окажемся в одном городе — думаю, это будет хорошая встреча.
 
 Спасибо тебе за всё.
@@ -548,8 +736,19 @@
     <p class="music-hint">press to set the mood</p>
 </div>
 
-<!-- Ambient Particles -->
-<div class="particles" id="particles"></div>
+<!-- Star Names -->
+<div class="star-name left">NUNI &#9825;</div>
+<div class="star-name right">&#9825; NUNI</div>
+
+<!-- Starfield -->
+<div class="starfield" id="starfield"></div>
+
+<!-- Moon -->
+<div class="moon-glow"></div>
+<div class="moon"></div>
+
+<!-- Shooting Stars -->
+<div id="shooting-stars"></div>
 
 <!-- Confetti Container -->
 <div id="confetti-container"></div>
@@ -575,7 +774,7 @@
         <div class="candle-group" id="candle-group"></div>
         <button class="blow-btn" id="blow-btn">Blow the Candles</button>
         <div class="wish-revealed" id="wish-text">
-            &#10024; May all your dreams come true &#10024;<br>
+            &#10024; May all your dreams come true InshAllah &#10024;<br>
             <span style="font-size: 1rem; color: var(--text-muted); font-style: normal;">
                 This year is going to be your best one yet.
             </span>
@@ -629,28 +828,135 @@
     <p class="section-note">Click anywhere for fireworks</p>
 </section>
 
+<!-- ─── From Me ─── -->
+<section id="from-me">
+    <div class="from-me-wrap">
+        <p>the one behind all of this</p>
+        <div class="divider"></div>
+        <div class="photo-trigger" id="photo-trigger">
+            <span class="trigger-icon">&#9678;</span>
+        </div>
+        <div class="photo-reveal" id="photo-reveal">
+            <img src="me.jpg" alt="">
+        </div>
+        <p class="photo-caption" id="photo-caption">tap again if you want</p>
+        <div class="photo-timer" id="photo-timer">
+            <div class="photo-timer-bar" id="photo-timer-bar"></div>
+        </div>
+    </div>
+</section>
+
 <!-- ─── Footer ─── -->
 <footer>
     <p>Made with <span class="heart">&hearts;</span> just for you</p>
 </footer>
 
 <script>
-    // ─── Ambient Particles ───
-    const particlesEl = document.getElementById('particles');
-    for (let i = 0; i < 60; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const size = Math.random() * 2 + 1;
-        p.style.cssText = `
+    // ─── Starlight Ceiling (Rolls-Royce style) ───
+    const starfield = document.getElementById('starfield');
+    for (let i = 0; i < 200; i++) {
+        const s = document.createElement('div');
+        const isWarm = Math.random() > 0.7;
+        s.className = 'star' + (isWarm ? ' warm' : '');
+        const size = Math.random() * 2 + 0.5;
+        const minO = Math.random() * 0.15 + 0.03;
+        const maxO = minO + Math.random() * 0.5 + 0.1;
+        s.style.cssText = `
             width:${size}px; height:${size}px;
-            left:${Math.random()*100}%;
-            bottom:${Math.random()*30}%;
-            --dur:${Math.random()*10+8}s;
-            --delay:${Math.random()*10}s;
-            --peak-opacity:${Math.random()*0.3+0.05};
+            top:${Math.random()*100}%; left:${Math.random()*100}%;
+            --dur:${Math.random()*4+2}s;
+            --delay:${Math.random()*5}s;
+            --min-o:${minO};
+            --max-o:${Math.min(maxO, 0.85)};
         `;
-        particlesEl.appendChild(p);
+        starfield.appendChild(s);
     }
+
+    // ─── NUNI Constellations (left + right) ───
+    (function() {
+        const c = document.createElement('canvas');
+        const x = c.getContext('2d');
+        c.width = 600; c.height = 160;
+        x.font = 'bold 130px serif';
+        x.fillStyle = '#fff';
+        x.textAlign = 'center';
+        x.textBaseline = 'middle';
+        x.fillText('NUNI \u2665', 300, 85);
+        const d = x.getImageData(0, 0, 600, 160).data;
+
+        const pts = [];
+        for (let py = 0; py < 160; py += 3) {
+            for (let px = 0; px < 600; px += 3) {
+                if (d[(py * 600 + px) * 4 + 3] > 128) {
+                    pts.push({ x: px / 600, y: py / 160 });
+                }
+            }
+        }
+        if (pts.length === 0) return;
+
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const textW = Math.min(vw * 0.4, 450);
+        const textH = textW * 0.24;
+
+        // Left NUNI: top 35%, left side, rotated -12deg
+        const configs = [
+            { ox: vw * 0.01, oy: vh * 0.35 - textH/2, ang: -12 * Math.PI / 180, cx: vw * 0.01 + textW/2, cy: vh * 0.35 },
+            { ox: vw - textW - vw * 0.01, oy: vh * 0.55 - textH/2, ang: 8 * Math.PI / 180, cx: vw - vw * 0.01 - textW/2, cy: vh * 0.55 },
+        ];
+
+        configs.forEach(cfg => {
+            for (let i = 0; i < 180; i++) {
+                const pt = pts[Math.floor(Math.random() * pts.length)];
+                const rawX = cfg.ox + pt.x * textW;
+                const rawY = cfg.oy + pt.y * textH;
+                const rx = Math.cos(cfg.ang) * (rawX - cfg.cx) - Math.sin(cfg.ang) * (rawY - cfg.cy) + cfg.cx;
+                const ry = Math.sin(cfg.ang) * (rawX - cfg.cx) + Math.cos(cfg.ang) * (rawY - cfg.cy) + cfg.cy;
+
+                const s = document.createElement('div');
+                s.className = 'star warm';
+                const size = Math.random() * 2.5 + 1.2;
+                s.style.cssText = `
+                    width:${size}px; height:${size}px;
+                    left:${rx}px; top:${ry}px;
+                    --dur:${Math.random()*3+1.5}s;
+                    --delay:${Math.random()*4}s;
+                    --min-o:${Math.random()*0.1+0.55};
+                    --max-o:${Math.random()*0.1+0.8};
+                    --dur:${Math.random()*4+4}s;
+                `;
+                starfield.appendChild(s);
+            }
+        });
+    })();
+
+    // ─── Shooting Stars ───
+    const shootContainer = document.getElementById('shooting-stars');
+    function launchShootingStar() {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+        const startX = Math.random() * 70 + 10;
+        const startY = Math.random() * 40 + 5;
+        const angle = Math.random() * 20 + 25;
+        const distance = Math.random() * 300 + 200;
+        const dx = Math.cos(angle * Math.PI / 180) * distance;
+        const dy = Math.sin(angle * Math.PI / 180) * distance;
+        const dur = Math.random() * 1 + 0.8;
+        star.style.cssText = `
+            left:${startX}%; top:${startY}%;
+            --angle:${angle}deg;
+            --dx:${dx}px; --dy:${dy}px;
+            --dur:${dur}s;
+        `;
+        shootContainer.appendChild(star);
+        requestAnimationFrame(() => star.classList.add('active'));
+        setTimeout(() => star.remove(), dur * 1000 + 100);
+
+        // Schedule next shooting star
+        setTimeout(launchShootingStar, Math.random() * 6000 + 3000);
+    }
+    // Start first shooting star after a short delay
+    setTimeout(launchShootingStar, 2000);
 
     // ─── Candles ───
     const candleGroup = document.getElementById('candle-group');
@@ -812,6 +1118,38 @@
         });
     }, { threshold: 0.15 });
     document.querySelectorAll('.wish-card').forEach(card => observer.observe(card));
+
+    // ─── Photo Reveal ───
+    const photoTrigger = document.getElementById('photo-trigger');
+    const photoReveal = document.getElementById('photo-reveal');
+    const photoCaption = document.getElementById('photo-caption');
+    const photoTimer = document.getElementById('photo-timer');
+    const photoTimerBar = document.getElementById('photo-timer-bar');
+    let photoVisible = false;
+    let photoTimeout = null;
+
+    photoTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (photoVisible) return;
+        photoVisible = true;
+
+        photoReveal.classList.add('show');
+        photoTimer.classList.add('show');
+        photoCaption.classList.remove('show');
+
+        // Reset and start timer bar
+        photoTimerBar.classList.remove('animate');
+        void photoTimerBar.offsetWidth; // force reflow
+        photoTimerBar.classList.add('animate');
+
+        photoTimeout = setTimeout(() => {
+            photoReveal.classList.remove('show');
+            photoTimer.classList.remove('show');
+            photoTimerBar.classList.remove('animate');
+            photoCaption.classList.add('show');
+            photoVisible = false;
+        }, 5000);
+    });
 
     // ─── Music ───
     const musicBtn = document.getElementById('music-btn');
