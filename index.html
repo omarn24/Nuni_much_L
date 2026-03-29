@@ -165,18 +165,22 @@
         .envelope-hint {
             margin-top: 18px;
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--gold);
             letter-spacing: 0.18em;
             text-transform: lowercase;
             font-style: italic;
             text-align: center;
             line-height: 1.8;
             opacity: 0;
-            animation: fadeInSlow 2s ease 1s forwards;
+            animation: fadeInHint 2s ease 1s forwards;
         }
         @keyframes fadeInSlow {
             from { opacity: 0; }
             to   { opacity: 0.5; }
+        }
+        @keyframes fadeInHint {
+            from { opacity: 0; }
+            to   { opacity: 0.7; }
         }
         @keyframes gentleFloat {
             0%, 100% { transform: translateY(0); }
@@ -630,13 +634,13 @@
             gap: 8px;
         }
         .music-hint {
-            font-size: 0.65rem;
-            color: var(--text-muted);
+            font-size: 0.7rem;
+            color: var(--gold);
             letter-spacing: 0.15em;
             text-transform: lowercase;
             font-style: italic;
             opacity: 0;
-            animation: fadeInSlow 2.5s ease 1.5s forwards;
+            animation: fadeInHint 2.5s ease 1.5s forwards;
             white-space: nowrap;
         }
         .music-btn {
